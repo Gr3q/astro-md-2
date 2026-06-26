@@ -2,10 +2,8 @@ import { satteri } from '@astrojs/markdown-satteri'
 import { shared } from './shared.js'
 import { HTMLString } from 'astro/runtime/server/index.js'
 
-// this module loads during config resolution, before
-// `astro:config:done` populates `shared.markdownConfig.processor`
-// so we defer creating the renderer until it's actually used.
-// Defaults to `satteri()` (Astro's default) when used without the integration (e.g. tests).
+// shared.markdownConfig.processor isn't set until astro:config:done,
+// but this file gets imported during config resolution.
 let rendererPromise
 
 function getRenderer() {
