@@ -1,15 +1,15 @@
-import type { MarkdownRenderingOptions, MarkdownRenderingResult } from '@astrojs/markdown-remark'
+import type { MarkdownRenderOptions, MarkdownRenderResult } from 'astro/markdown'
 
-export type { MarkdownRenderingOptions, MarkdownRenderingResult }
+export type { MarkdownRenderOptions, MarkdownRenderResult }
 
 export var markdown: {
 	(
 		content: string,
-		options?: MarkdownRenderingOptions
+		options?: MarkdownRenderOptions
 	): Promise<string>
 
 	inline(
 		content: string,
-		options?: MarkdownRenderingOptions
+		options?: MarkdownRenderOptions
 	): Promise<string>
 }

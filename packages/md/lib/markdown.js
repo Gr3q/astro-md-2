@@ -1,15 +1,23 @@
-import { createMarkdownProcessor } from '@astrojs/markdown-remark'
+import { satteri } from '@astrojs/markdown-satteri'
 import { shared } from './shared.js'
 import { HTMLString } from 'astro/runtime/server/index.js'
 
-const processor = await createMarkdownProcessor({
-	...shared.markdownConfig,
-})
+// this module loads during config resolution, before
+// `astro:config:done` populates `shared.markdownConfig.processor`
+// so we defer creating the renderer until it's actually used.
+// Defaults to `satteri()` (Astro's default) when used without the integration (e.g. tests).
+let rendererPromise
+
+function getRenderer() {
+	const { processor = satteri() } = shared.markdownConfig
+	return (rendererPromise ??= processor.createRenderer(shared.markdownConfig))
+}
 
 export async function markdown(
 	/** @type {string} */ content,
-	/** @type {MarkdownRenderingOptions} */ options = null
+	/** @type {MarkdownRenderOptions} */ options = null
 ) {
+	const processor = await getRenderer()
 	const result = await processor.render(content, options)
 
 	return new HTMLString(result.code)
@@ -17,16 +25,15 @@ export async function markdown(
 
 markdown.inline = async function inlinemarkdown(
 	/** @type {string} */ content,
-	/** @type {MarkdownRenderingOptions} */ options = null
+	/** @type {MarkdownRenderOptions} */ options = null
 ) {
+	const processor = await getRenderer()
 	const result = await processor.render(content, options)
 
+	const code = result.code.trim()
 	return new HTMLString(
-		result.code.indexOf("<p>") === 0 &&
-		result.code.indexOf("</p>") === result.code.length - 4
-			? result.code.slice(3, -4)
-			: result.code,
+		code.startsWith('<p>') && code.endsWith('</p>') ? code.slice(3, -4) : code
 	)
 }
 
-/** @typedef {import('./markdown').MarkdownRenderingOptions} MarkdownRenderingOptions */
+/** @typedef {import('./markdown').MarkdownRenderOptions} MarkdownRenderOptions */

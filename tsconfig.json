@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"module": "ESNext",
-		"moduleResolution": "node",
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"exactOptionalPropertyTypes": true,
 		"isolatedModules": true,
 		"resolveJsonModule": true,

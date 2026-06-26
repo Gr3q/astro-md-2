@@ -26,7 +26,7 @@
 		"startCommand": "npm start"
 	},
 	"devDependencies": {
-		"astro": "6",
+		"astro": "7",
 		"types-object": "latest",
 		"vitest": "^4.1.4"
 	}
